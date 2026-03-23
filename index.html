@@ -556,25 +556,20 @@ footer{background:#060606;border-top:1px solid var(--border);padding:40px 60px;d
 <div id="buy-modal-overlay">
   <div class="buy-modal">
     <button class="modal-close" onclick="closeBuyModal()">✕</button>
-
     <h2 id="modal-product-name">PRODUK</h2>
     <span class="price-tag" id="modal-product-price">Rp0</span>
-
     <div class="form-group" style="margin-bottom:16px;">
       <label>Nama / Username</label>
       <input type="text" id="buy-name" class="form-input">
     </div>
-
     <div class="form-group" style="margin-bottom:16px;">
       <label>Kontak (Discord / WA)</label>
       <input type="text" id="buy-contact" class="form-input">
     </div>
-
     <div class="form-group" style="margin-bottom:16px;">
       <label>Catatan (opsional)</label>
       <input type="text" id="buy-note" class="form-input">
     </div>
-
     <!-- ✅ PAYMENT METHOD -->
     <div class="form-group" style="margin-bottom:16px;">
       <label style="font-size:.7rem;color:#888;">Pilih Pembayaran</label>
@@ -584,7 +579,6 @@ footer{background:#060606;border-top:1px solid var(--border);padding:40px 60px;d
         <option value="idr">💳 IDR (Transfer / QRIS)</option>
       </select>
     </div>
-
     <button class="btn-primary" style="width:100%" onclick="placeOrder()">
       PESAN SEKARANG
     </button>
@@ -1158,55 +1152,41 @@ window.placeOrder = async function(){
     showToast('⚠ Kamu harus login!');
     return;
   }
-
   const method = document.getElementById('payment-method').value;
-
   if(!method){
     showToast('⚠ Pilih metode pembayaran dulu!');
     return;
   }
-
   const productName = document.getElementById('modal-product-name').textContent;
   const priceText = document.getElementById('modal-product-price').textContent;
   const price = parseInt(priceText.replace(/\D/g,'')) || 0;
-
   // ===== COIN =====
   if(method === 'coin'){
     if((currentUser.coins || 0) < price){
       showToast('❌ Koin tidak cukup! Dialihkan ke top up...');
-
       setTimeout(()=>{
         closeBuyModal();
         openCoinShop();
       },1000);
-
       return;
     }
-
     const newCoin = (currentUser.coins || 0) - price;
-
     await updateDoc(doc(db,'users',currentUser.username.toLowerCase()),{
       coins:newCoin
     });
-
     currentUser.coins = newCoin;
     updateNavCoin();
-
     showToast('✅ Berhasil beli pakai coin!');
   }
-
   // ===== IDR =====
   if(method === 'idr'){
     showToast('💳 Lanjut ke pembayaran IDR...');
-
     setTimeout(()=>{
       closeBuyModal();
       openCoinShop();
     },1000);
-
     return;
   }
-
   // ===== SIMPAN ORDER =====
   await addDoc(collection(db,'orders'),{
     username: currentUser.username,
@@ -1216,7 +1196,6 @@ window.placeOrder = async function(){
     status: 'pending',
     createdAt: new Date()
   });
-
   closeBuyModal();
 };
 // ── PRODUCTS ──
